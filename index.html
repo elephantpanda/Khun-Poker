@@ -90,19 +90,26 @@ function cardValue(card) {
   if (card === 'K') return 13;
 }
 
-function computerDecision() {
-  // Simple AI logic: bet if card is high
-  if (cardValue(computerCard) >= 12) return 'bet';
-  else return 'check';
+function computerDecision(playerActionFirst) {
+  // Nash equilibrium strategy for Player 2
+  const rand = Math.random();
+  if (computerCard === 'K') return playerActionFirst === 'check' ? 'check' : 'call'; // always strong
+  if (computerCard === 'Q') {
+    if (playerActionFirst === 'check') return 'check';
+    else return rand < 1/3 ? 'call' : 'fold';
+  }
+  if (computerCard === 'J') {
+    if (playerActionFirst === 'check') return rand < 1/3 ? 'bet' : 'check';
+    else return 'fold';
+  }
 }
 
 function playerAction(action) {
   if(gameOver) return;
 
-  let computerAct = computerDecision();
+  let computerAct = computerDecision(action === 'check' ? 'check' : 'bet');
   let message = `You chose ${action}. Computer chose ${computerAct}. `;
 
-  // Determine winner
   let revealCards = false;
 
   if(action === 'fold') {
