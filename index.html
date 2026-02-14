@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khun Poker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0a5d0a; /* green background */
+    color: white;
+    text-align: center;
+    padding-top: 50px;
+  }
+  .cards {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  .card {
+    width: 100px;
+    height: 150px;
+    background-color: white;
+    color: black;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .card.back {
+    background-color: #222;
+    color: #222;
+  }
+  .actions button {
+    font-size: 18px;
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  #scoreboard {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Khun Poker</h1>
+<div class="cards">
+  <div id="human-card" class="card">?</div>
+  <div id="computer-card" class="card back">?</div>
+</div>
+
+<div class="actions">
+  <button onclick="playerAction('check')">Check</button>
+  <button onclick="playerAction('bet')">Bet</button>
+  <button onclick="playerAction('call')">Call</button>
+  <button onclick="playerAction('fold')">Fold</button>
+</div>
+
+<div id="message"></div>
+<div id="scoreboard">Player: 0 | Computer: 0</div>
+<button onclick="restartGame()">Restart Game</button>
+
+<script>
+const cards = ['J', 'Q', 'K'];
+let humanCard, computerCard;
+let humanScore = 0, computerScore = 0;
+let gameOver = false;
+
+function startGame() {
+  gameOver = false;
+  humanCard = cards[Math.floor(Math.random() * cards.length)];
+  do {
+    computerCard = cards[Math.floor(Math.random() * cards.length)];
+  } while (computerCard === humanCard); // prevent tie for simplicity
+
+  document.getElementById('human-card').textContent = humanCard;
+  document.getElementById('computer-card').textContent = '?';
+  document.getElementById('computer-card').classList.add('back');
+  document.getElementById('message').textContent = 'Your move.';
+}
+
+function cardValue(card) {
+  if (card === 'J') return 11;
+  if (card === 'Q') return 12;
+  if (card === 'K') return 13;
+}
+
+function computerDecision() {
+  // Simple AI logic: bet if card is high
+  if (cardValue(computerCard) >= 12) return 'bet';
+  else return 'check';
+}
+
+function playerAction(action) {
+  if(gameOver) return;
+
+  let computerAct = computerDecision();
+  let message = `You chose ${action}. Computer chose ${computerAct}. `;
+
+  // Determine winner
+  let revealCards = false;
+
+  if(action === 'fold') {
+    computerScore++;
+    message += 'You folded. Computer wins this round.';
+    revealCards = true;
+  } else if(action === 'check' && computerAct === 'check') {
+    revealCards = true;
+  } else if(action === 'bet' || action === 'call') {
+    revealCards = true;
+  }
+
+  if(revealCards) {
+    document.getElementById('computer-card').textContent = computerCard;
+    document.getElementById('computer-card').classList.remove('back');
+
+    let humanVal = cardValue(humanCard);
+    let compVal = cardValue(computerCard);
+
+    if(action !== 'fold') {
+      if(humanVal > compVal) {
+        humanScore++;
+        message += 'You win this round!';
+      } else {
+        computerScore++;
+        message += 'Computer wins this round!';
+      }
+    }
+
+    gameOver = true;
+    document.getElementById('scoreboard').textContent = `Player: ${humanScore} | Computer: ${computerScore}`;
+  }
+
+  document.getElementById('message').textContent = message;
+}
+
+function restartGame() {
+  startGame();
+}
+
+startGame();
+</script>
+
+</body>
+</html>
