@@ -32,14 +32,60 @@
     position: relative;
   }
   .card.back {
-    background-color: #222;
-    color: #222;
+    color: #fff;
+    background: repeating-linear-gradient(
+      45deg,
+      #c00,
+      #c00 10px,
+      #900 10px,
+      #900 20px
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
   }
   .actions button {
     font-size: 18px;
     margin: 10px;
-    padding: 10px 20px;
+    padding: 12px 25px;
     cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #ff4b5c, #f9d423);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+  }
+  .actions button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+  }
+  #restart-button {
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 12px 25px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #3498db, #2ecc71);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  #restart-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+  }
+  #restart-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
   }
   #scoreboard {
     margin-top: 20px;
@@ -70,7 +116,7 @@
 <h1>Khun Poker</h1>
 <div class="cards">
   <div id="human-card" class="card"></div>
-  <div id="computer-card" class="card back"></div>
+  <div id="computer-card" class="card back">?</div>
 </div>
 
 <div class="actions">
@@ -82,7 +128,7 @@
 
 <div id="message"></div>
 <div id="scoreboard">Player: 0 | Computer: 0</div>
-<button onclick="restartGame()">Restart Game</button>
+<button id="restart-button" onclick="restartGame()">Restart Game</button>
 
 <script>
 const cards = ['J', 'Q', 'K'];
